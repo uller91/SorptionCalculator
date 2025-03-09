@@ -3,7 +3,7 @@ from isobar_calculator import isobar_calculator
 from pressure import calculate_pressure
 
 
-def calculate_cycle(T_1, T_2, T_2_S, T_3, df_curve_file_path):
+def calculate_cycle(T_1, T_2, T_2_S, T_3, df_curve_file_path, file_path_to):
     if T_2 == T_2_S:
         print(f"Calculating parameters for the {T_3}/{T_2}/{T_1} cycle.")
     else:
@@ -17,9 +17,9 @@ def calculate_cycle(T_1, T_2, T_2_S, T_3, df_curve_file_path):
 
     print("\nCalculating isobars...")
     right_isobar_pressure = calculate_pressure(T_2)
-    isobar_calculator(right_isobar_pressure, df_curve_file_path)
+    isobar_calculator(right_isobar_pressure, df_curve_file_path, file_path_to)
     left_isobar_pressure = calculate_pressure(T_3)
-    isobar_calculator(left_isobar_pressure, df_curve_file_path)
+    isobar_calculator(left_isobar_pressure, df_curve_file_path, file_path_to)
 
     w_1 = uptake_from_adsorption_potential(dF_right, df_curve_file_path)
     w_1_formatted = format(w_1, ".3f")

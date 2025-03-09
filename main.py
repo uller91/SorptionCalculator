@@ -1,3 +1,5 @@
+import os.path
+
 from pressure import calculate_pressure, calculate_temperature
 from adsorption_potential import calculate_adsorption_potential
 from adsorption_potential import temperature_from_adsorption_potential_and_pressure as df_to_t
@@ -13,13 +15,13 @@ def run_cycle_calculator():
             T_1 = float(input("Enter high temperature in Celcius: "))
             T_2 = float(input("Enter medium temperature in Celcius: "))
             T_3 = float(input("Enter low temperature in Celcius: "))
-            calculate_cycle(T_1, T_2, T_2, T_3, df_curve_file_path)
+            calculate_cycle(T_1, T_2, T_2, T_3, df_curve_file_path, file_path_to)
         case "4t":
             T_1 = float(input("Enter high temperature in Celcius: "))
             T_2 = float(input("Enter condencer temperature in Celcius: "))
             T_2_S = float(input("Enter adsorption temperature in Celcius: "))
             T_3 = float(input("Enter evaporator temperature in Celcius: "))
-            calculate_cycle(T_1, T_2, T_2_S, T_3, df_curve_file_path)
+            calculate_cycle(T_1, T_2, T_2_S, T_3, df_curve_file_path, file_path_to)
         case _:
             print("\nWrong mode!")
     repeat_or_abort(4)
@@ -32,12 +34,12 @@ def run_isobar_calculator():
         case "t":
             temperature = float(input("Enter the temperature for the isobar in C: "))
             pressure = calculate_pressure(temperature)
-            isobar_calculator(pressure, df_curve_file_path)
+            isobar_calculator(pressure, df_curve_file_path, file_path_to)
             pressure_formatted = format(pressure, ".2f")
             print(f"\n{pressure_formatted} mbar isobar created!")
         case "p":
             pressure = float(input("Enter the pressure for the isobar in mbar: "))
-            isobar_calculator(pressure, df_curve_file_path)
+            isobar_calculator(pressure, df_curve_file_path, file_path_to)
             print(f"\n{pressure} mbar isobar created!")
         case _:
             print("\nWrong mode!")
@@ -148,7 +150,11 @@ def running_the_subroutine():
 
 def main():
     global df_curve_file_path 
-    df_curve_file_path = "data\w_vs_dF_B300_35CaCl2.txt" #dF curve file path
+    global file_path_to
+    file_path_from = "data"
+    df_curve = "w_vs_dF_B300_35CaCl2.txt"
+    df_curve_file_path = os.path.join(file_path_from, df_curve) #solving Linux vs Windows separator problem
+    file_path_to = "calculated" #file path for calculated files !!! "/" for linux and "\" for windows
     
     print("Welcome to the sorption calculator. Available subroutines:")
     
