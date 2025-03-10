@@ -1,10 +1,10 @@
 import os.path
 
-from adsorption_potential import temperature_from_adsorption_potential_and_pressure as df_to_t
+from calculator_adsorption_potential import temperature_from_adsorption_potential_and_pressure
 
 
-def isobar_calculator(p, file_path, file_path_to):
-    f = open(file_path, "r")
+def calculate_isobar(p, file_path_df_curve, file_path_to):
+    f = open(file_path_df_curve, "r")
     content = f.readlines()
     file_name = format(p, ".2f")
     full_file_path_to = os.path.join(file_path_to, f"Isobar_{file_name}_mbar.csv")
@@ -12,11 +12,11 @@ def isobar_calculator(p, file_path, file_path_to):
     n_f.write(f"Isobar, {file_name}, mbar\n")
 
     for i in range(len(content)):
-        line = content[i].split()
+        line = (content[i].strip("\n")).split(", ")
         if i == 0:
            line.append("T\n")
         else:
-           line.append(str(df_to_t(float(line[1]), p)) + "\n")
+           line.append(str(temperature_from_adsorption_potential_and_pressure(float(line[1]), p)) + "\n")
         n_f.write(", ".join(line))
 
     f.close()
