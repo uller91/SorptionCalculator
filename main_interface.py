@@ -3,6 +3,24 @@ from calculator_adsorption_potential import calculate_adsorption_potential, upta
 from calculator_isobar import calculate_isobar
 from calculator_cycle import calculate_cycle
 from write_data import write_data_into_file
+import os.path
+import os
+
+def initiate_the_interface(path_from, path_to, df_curve_file, df_curve_ext):
+    #this fucntion exist to contorl file paths to make all the subroutine signatures clean
+
+    #these file paths are:
+    global file_path_df_curve
+    global file_path_to
+    global file_path_to_df #df curve subfolder inside file_path_to
+
+    df_curve_ext = ".csv" #The code is working with .csv
+    df_curve = df_curve_file + df_curve_ext
+    file_path_df_curve = os.path.join(path_from, df_curve)
+    file_path_to = path_to
+    file_path_to_df = os.path.join(path_to, df_curve_file)
+
+    run_the_interface()
 
 
 def run_cycle_calculator():
@@ -13,13 +31,13 @@ def run_cycle_calculator():
             T_1 = float(input("Enter high temperature in Celcius: "))
             T_2 = float(input("Enter medium temperature in Celcius: "))
             T_3 = float(input("Enter low temperature in Celcius: "))
-            calculate_cycle(T_1, T_2, T_2, T_3, file_path_df_curve, file_path_to)
+            calculate_cycle(T_1, T_2, T_2, T_3, file_path_df_curve, file_path_to_df)
         case "4t":
             T_1 = float(input("Enter high temperature in Celcius: "))
             T_2 = float(input("Enter condencer temperature in Celcius: "))
             T_2_S = float(input("Enter adsorption temperature in Celcius: "))
             T_3 = float(input("Enter evaporator temperature in Celcius: "))
-            calculate_cycle(T_1, T_2, T_2_S, T_3, file_path_df_curve, file_path_to)
+            calculate_cycle(T_1, T_2, T_2_S, T_3, file_path_df_curve, file_path_to_df)
         case _:
             print("\nWrong mode!")
     repeat_or_abort(4)
@@ -32,12 +50,12 @@ def run_isobar_calculator():
         case "t":
             temperature = float(input("Enter the temperature for the isobar in C: "))
             pressure = pressure_from_temperature(temperature)
-            calculate_isobar(pressure, file_path_df_curve, file_path_to)
+            calculate_isobar(pressure, file_path_df_curve, file_path_to_df)
             pressure_formatted = format(pressure, ".2f")
             print(f"\n{pressure_formatted} mbar isobar created!")
         case "p":
             pressure = float(input("Enter the pressure for the isobar in mbar: "))
-            calculate_isobar(pressure, file_path_df_curve, file_path_to)
+            calculate_isobar(pressure, file_path_df_curve, file_path_to_df)
             print(f"\n{pressure} mbar isobar created!")
         case _:
             print("\nWrong mode!")
@@ -61,7 +79,7 @@ def run_adsorption_potential_calculator():
             pp0_formatted = format(p/p0, ".2f")
 
             data = [dF_formatted, T_1, T_2, p_formatted, pp0_formatted]
-            write_data_into_file(2, data)
+            write_data_into_file(2, data, file_path_to=file_path_to)
         case "p":
             T_1 = float(input("Enter high temperature in Celcius: "))
             p = float(input("Enter pressure of the low temperature source in mbar: "))
@@ -75,7 +93,7 @@ def run_adsorption_potential_calculator():
             pp0_formatted = format(p/p0, ".2f")
 
             data = [dF_formatted, T_1, T_2, p, pp0_formatted]
-            write_data_into_file(2, data)
+            write_data_into_file(2, data, file_path_to=file_path_to)
         case "pp0":
             T_1 = float(input("Enter high temperature in Celcius: "))
             pp0 = float(input("Enter P/P0: "))
@@ -91,7 +109,7 @@ def run_adsorption_potential_calculator():
             T_2_formatted = format(T_2, ".2f")
 
             data = [dF_formatted, T_1, T_2_formatted, p_formatted, pp0]
-            write_data_into_file(2, data)
+            write_data_into_file(2, data, file_path_to=file_path_to)
         case "cycle":
             T_1 = float(input("Enter high temperature in Celcius: "))
             T_2 = float(input("Enter medium temperature in Celcius: "))
@@ -102,14 +120,18 @@ def run_adsorption_potential_calculator():
             dF_left_formatted = format(dF_left, ".2f")
             print(f"\nCalculated adsorption potential for the right boundary of the cycle is {dF_right_formatted} J/mol")
             print(f"Calculated adsorption potential for the left boundary of the cycle is {dF_left_formatted} J/mol")
+            
             data = [dF_right_formatted, dF_left_formatted, T_1, T_2, T_3]
-            write_data_into_file(2, data, mode=mode)
+            write_data_into_file(2, data, mode=mode, file_path_to=file_path_to)
         case "uptake": #add write data - write into the dF folder
             dF = float(input("Enter desired dF value: "))
             dF_formatted = format(dF, ".2f")
             uptake = uptake_from_adsorption_potential(dF, file_path_df_curve)
             uptake_formatted = format(uptake, ".2f")
             print(f"\nCalculated uptake from adsorption potential {dF_formatted} J/mol is {uptake_formatted} g/g")
+
+            data = [dF_formatted, uptake_formatted]
+            write_data_into_file(2, data, mode=mode, file_path_to_df=file_path_to_df)
         case _:
             print("\nWrong mode!")
     repeat_or_abort(2)
@@ -126,14 +148,14 @@ def run_pressure_calculator():
             p_mbar_formatted = format(p_mbar, ".2f")
             print(f"\nCalculated pressure for {T_c}C ({T_k}K) is {p_mbar_formatted} mbar")
             data = [T_c, p_mbar_formatted]
-            write_data_into_file(1, data)
+            write_data_into_file(1, data, file_path_to=file_path_to)
         case "t":
             p_mbar = float(input("Enter pressure in mbar: "))
             T_c = temperature_from_pressure(p_mbar)
             T_c_formatted = format(T_c, ".2f")
             print(f"\nCalculated temperature for {p_mbar} mbar is {T_c_formatted}C")
             data = [T_c_formatted, p_mbar]
-            write_data_into_file(1, data)
+            write_data_into_file(1, data, file_path_to=file_path_to)
     repeat_or_abort(1)
     return
 
@@ -154,13 +176,10 @@ def repeat_or_abort(n):
             print("Thank you for using the sorption calculatior today!\n")
             exit(0)
         case _:
-            run_the_interface(file_path_df_curve, file_path_to)
+            run_the_interface()
 
-def run_the_interface(path_df_curve, path_to):
-    global file_path_df_curve 
-    global file_path_to
-    file_path_df_curve = path_df_curve
-    file_path_to = path_to
+def run_the_interface():
+    print("Welcome to the sorption calculator. Available subroutines:")
     print("")
     print("1 - Pressure calculator")
     print("2 - Adsorption potential calculator")
@@ -184,4 +203,4 @@ def run_the_interface(path_df_curve, path_to):
             exit(0)
         case _:
             print("Such subroutine doesn't exist!")
-            run_the_interface(file_path_df_curve, file_path_to)
+            run_the_interface()

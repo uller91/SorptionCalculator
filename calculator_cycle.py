@@ -1,9 +1,10 @@
 from calculator_adsorption_potential import calculate_adsorption_potential, uptake_from_adsorption_potential, temperature_from_adsorption_potential_and_pressure
 from calculator_isobar import calculate_isobar
 from calculator_water_pressure import pressure_from_temperature
+from write_data import write_data_into_file
 
 
-def calculate_cycle(T_1, T_2, T_2_S, T_3, file_path_df_curve, file_path_to):
+def calculate_cycle(T_1, T_2, T_2_S, T_3, file_path_df_curve, file_path_to_df):
     if T_2 == T_2_S:
         print(f"Calculating parameters for the {T_3}/{T_2}/{T_1} cycle.")
     else:
@@ -17,9 +18,9 @@ def calculate_cycle(T_1, T_2, T_2_S, T_3, file_path_df_curve, file_path_to):
 
     print("\nCalculating isobars...")
     right_isobar_pressure = pressure_from_temperature(T_2)
-    calculate_isobar(right_isobar_pressure, file_path_df_curve, file_path_to)
+    calculate_isobar(right_isobar_pressure, file_path_df_curve, file_path_to_df)
     left_isobar_pressure = pressure_from_temperature(T_3)
-    calculate_isobar(left_isobar_pressure, file_path_df_curve, file_path_to)
+    calculate_isobar(left_isobar_pressure, file_path_df_curve, file_path_to_df)
 
     w_1 = uptake_from_adsorption_potential(dF_right, file_path_df_curve)
     w_1_formatted = format(w_1, ".3f")
@@ -37,5 +38,8 @@ def calculate_cycle(T_1, T_2, T_2_S, T_3, file_path_df_curve, file_path_to):
     T_d_i_formatted = format(T_d_i, ".1f")
     print(f"\nCalculated initial adsorption temperature is {T_s_i_formatted}C")
     print(f"Calculated initial desorption temperature is {T_d_i_formatted}C")
+
+    data = [T_1, T_2, T_2_S, T_3, dF_right_formatted, dF_left_formatted, w_1_formatted, w_2_formatted, dw_formatted, T_s_i_formatted, T_d_i_formatted]
+    write_data_into_file(4, data, file_path_to_df=file_path_to_df)
 
 
