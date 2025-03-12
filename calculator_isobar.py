@@ -16,7 +16,7 @@ def calculate_isobar(p, file_path_df_curve, file_path_to):
     for i in range(len(content)):
         line = (content[i].strip("\n")).split(", ")
         if i == 0:
-           line.append("T\n")
+           line.append("T [C]\n")
         else:
            line.append(str(temperature_from_adsorption_potential_and_pressure(float(line[1]), p)) + "\n")
         n_f.write(", ".join(line))

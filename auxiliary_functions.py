@@ -1,3 +1,4 @@
+"""
 def find_closest_to_value(target, table):
     # table is the the 2xN table with value we are looking for in the first column.
     # The target is to find value which is closest to the one corresponing to the target (from the second column)
@@ -36,7 +37,7 @@ def find_closest_to_value(target, table):
         closest_value = table[-1][0] - slope * (target-table[-1][1])
 
     return closest_value
-
+"""
 
 def find_closest_to_value_v2(target, table, x, y, reverse = False):
     # searches (interpolates) clossest value to target in table in column x then matches (closest) value in the same string of the column y
