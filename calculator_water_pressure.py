@@ -15,13 +15,3 @@ def temperature_from_pressure(p_mbar):
     T_0 = 0 #C
     return find_value_from_function(p_mbar, pressure_from_temperature, increment, T_0)
 
-"""
-def main():
-    print("Pressure calculator")
-    T_c = float(input("Enter temperature in Celcius: "))
-    T_k = T_c + 273.15 #C to K
-    p_mbar = format(calculate_pressure(T_c), ".2f")
-    print(f"Calculated pressure for {T_c}C ({T_k}K) is {p_mbar} mbar")
-"""
-
-#main()

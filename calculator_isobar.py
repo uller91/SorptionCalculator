@@ -7,7 +7,7 @@ from calculator_adsorption_potential import temperature_from_adsorption_potentia
 def calculate_isobar(p, file_path_df_curve, file_path_to_df):
     f = open(file_path_df_curve, "r")
     content = f.readlines()
-    file_name = format(p, ".2f")
+    file_name = round(p, 2)
     os.makedirs(file_path_to_df, exist_ok=True)
     full_file_path_to = os.path.join(file_path_to_df, f"Isobar_{file_name}_mbar.csv")
     n_f = open(full_file_path_to, "w+")
@@ -24,12 +24,3 @@ def calculate_isobar(p, file_path_df_curve, file_path_to_df):
     f.close()
     n_f.close()
     return
-
-"""
-def main():
-    p = 12 #isobar pressure
-    file_path = "w_vs_dF.txt"
-    isobar_calculator(p, file_path)
-"""
-
-#main()

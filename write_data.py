@@ -46,6 +46,7 @@ def write_data_into_file(subroutine, data, mode = None, file_path_to = None, fil
                 f.close()
                 return
             if mode == "uptake":
+                os.makedirs(file_path_to_df, exist_ok=True)
                 file_path = os.path.join(file_path_to_df, "calculator_adsorption_potential_uptake_results.csv")
                 if not os.path.isfile(file_path):
                     f = open(file_path, "w+")
@@ -58,6 +59,7 @@ def write_data_into_file(subroutine, data, mode = None, file_path_to = None, fil
                 f.close()
                 return
         case 4:
+            os.makedirs(file_path_to_df, exist_ok=True)
             file_path = os.path.join(file_path_to_df, "calculator_cycle_results.csv")
             if not os.path.isfile(file_path):
                 f = open(file_path, "w+")

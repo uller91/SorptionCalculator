@@ -51,8 +51,8 @@ def run_isobar_calculator():
             temperature = float(input("Enter the temperature for the isobar in C: "))
             pressure = pressure_from_temperature(temperature)
             calculate_isobar(pressure, file_path_df_curve, file_path_to_df)
-            pressure_formatted = format(pressure, ".2f")
-            print(f"\n{pressure_formatted} mbar isobar created!")
+            pressure_round = round(pressure, 2)
+            print(f"\n{pressure_round} mbar isobar created!")
         case "p":
             pressure = float(input("Enter the pressure for the isobar in mbar: "))
             calculate_isobar(pressure, file_path_df_curve, file_path_to_df)
@@ -70,67 +70,66 @@ def run_adsorption_potential_calculator():
             T_1 = float(input("Enter high temperature in Celcius: "))
             T_2 = float(input("Enter low temperature in Celcius: "))
             dF = calculate_adsorption_potential(T_2)(T_1)
-            dF_formatted = format(dF, ".2f")
-            print(f"\nCalculated adsorption potential for {T_1}C and {T_2}C is {dF_formatted} J/mol")
+            dF_round = round(dF, 2)
+            print(f"\nCalculated adsorption potential for {T_1}C and {T_2}C is {dF_round} J/mol")
             
             p = pressure_from_temperature(T_2)
-            p_formatted = format(p, ".2f")
+            p_round = round(p, 2)
             p0 = pressure_from_temperature(T_1)
-            pp0_formatted = format(p/p0, ".2f")
+            pp0_round = round(p/p0, 2)
 
-            data = [dF_formatted, T_1, T_2, p_formatted, pp0_formatted]
+            data = [dF_round, T_1, T_2, p_round, pp0_round]
             write_data_into_file(2, data, file_path_to=file_path_to)
         case "p":
             T_1 = float(input("Enter high temperature in Celcius: "))
             p = float(input("Enter pressure of the low temperature source in mbar: "))
             dF = calculate_adsorption_potential(pressure=p)(T_1)
-            dF_formatted = format(dF, ".2f")
-            print(f"\nCalculated adsorption potential for {T_1}C and {p} mbar is {dF_formatted} J/mol")
+            dF_round = round(dF, 2)
+            print(f"\nCalculated adsorption potential for {T_1}C and {p} mbar is {dF_round} J/mol")
             
             T_2 = temperature_from_pressure(p)
-            T_2_formatted = format(T_2, ".2f")
+            T_2_round = round(T_2, 2)
             p0 = pressure_from_temperature(T_1)
-            pp0_formatted = format(p/p0, ".2f")
+            pp0_round = round(p/p0, 2)
 
-            data = [dF_formatted, T_1, T_2, p, pp0_formatted]
+            data = [dF_round, T_1, T_2_round, p, pp0_round]
             write_data_into_file(2, data, file_path_to=file_path_to)
         case "pp0":
             T_1 = float(input("Enter high temperature in Celcius: "))
             pp0 = float(input("Enter P/P0: "))
             dF = calculate_adsorption_potential(PP0=pp0)(T_1)
-            dF_formatted = format(dF, ".2f")
-            #dF = format(calculate_adsorption_potential(T_1, pressure==relative_pressure), ".2f")
-            print(f"\nCalculated adsorption potential for {T_1}C and {pp0} is {dF_formatted} J/mol")
+            dF_round = round(dF, 2)
+            print(f"\nCalculated adsorption potential for {T_1}C and {pp0} is {dF_round} J/mol")
 
             p0 = pressure_from_temperature(T_1)
             p = pp0 * p0
-            p_formatted = format(p, ".2f")
+            p_round = round(p, 2)
             T_2 = temperature_from_pressure(p)
-            T_2_formatted = format(T_2, ".2f")
+            T_2_round = round(T_2, 2)
 
-            data = [dF_formatted, T_1, T_2_formatted, p_formatted, pp0]
+            data = [dF_round, T_1, T_2_round, p_round, pp0]
             write_data_into_file(2, data, file_path_to=file_path_to)
         case "cycle":
             T_1 = float(input("Enter high temperature in Celcius: "))
             T_2 = float(input("Enter medium temperature in Celcius: "))
             T_3 = float(input("Enter low temperature in Celcius: "))
             dF_right = calculate_adsorption_potential(T_2)(T_1)
-            dF_right_formatted = format(dF_right, ".2f")
+            dF_right_round = round(dF_right, 2)
             dF_left = calculate_adsorption_potential(T_3)(T_2)
-            dF_left_formatted = format(dF_left, ".2f")
-            print(f"\nCalculated adsorption potential for the right boundary of the cycle is {dF_right_formatted} J/mol")
-            print(f"Calculated adsorption potential for the left boundary of the cycle is {dF_left_formatted} J/mol")
+            dF_left_round = round(dF_left, 2)
+            print(f"\nCalculated adsorption potential for the right boundary of the cycle is {dF_right_round} J/mol")
+            print(f"Calculated adsorption potential for the left boundary of the cycle is {dF_left_round} J/mol")
             
-            data = [dF_right_formatted, dF_left_formatted, T_1, T_2, T_3]
+            data = [dF_right_round, dF_left_round, T_1, T_2, T_3]
             write_data_into_file(2, data, mode=mode, file_path_to=file_path_to)
         case "uptake": #add write data - write into the dF folder
             dF = float(input("Enter desired dF value: "))
-            dF_formatted = format(dF, ".2f")
+            dF_round = round(dF, 2)
             uptake = uptake_from_adsorption_potential(dF, file_path_df_curve)
-            uptake_formatted = format(uptake, ".2f")
-            print(f"\nCalculated uptake from adsorption potential {dF_formatted} J/mol is {uptake_formatted} g/g")
+            uptake_round = round(uptake, 2)
+            print(f"\nCalculated uptake from adsorption potential {dF_round} J/mol is {uptake_round} g/g")
 
-            data = [dF_formatted, uptake_formatted]
+            data = [dF_round, uptake_round]
             write_data_into_file(2, data, mode=mode, file_path_to_df=file_path_to_df)
         case _:
             print("\nWrong mode!")
@@ -145,16 +144,16 @@ def run_pressure_calculator():
             T_c = float(input("Enter temperature in Celcius: "))
             T_k = T_c + 273.15 #C to K
             p_mbar = pressure_from_temperature(T_c)
-            p_mbar_formatted = format(p_mbar, ".2f")
-            print(f"\nCalculated pressure for {T_c}C ({T_k}K) is {p_mbar_formatted} mbar")
-            data = [T_c, p_mbar_formatted]
+            p_mbar_round = round(p_mbar, 2)
+            print(f"\nCalculated pressure for {T_c}C ({T_k}K) is {p_mbar_round} mbar")
+            data = [T_c, p_mbar_round]
             write_data_into_file(1, data, file_path_to=file_path_to)
         case "t":
             p_mbar = float(input("Enter pressure in mbar: "))
             T_c = temperature_from_pressure(p_mbar)
-            T_c_formatted = format(T_c, ".2f")
-            print(f"\nCalculated temperature for {p_mbar} mbar is {T_c_formatted}C")
-            data = [T_c_formatted, p_mbar]
+            T_c_round = round(T_c, 2)
+            print(f"\nCalculated temperature for {p_mbar} mbar is {T_c_round}C")
+            data = [T_c_round, p_mbar]
             write_data_into_file(1, data, file_path_to=file_path_to)
     repeat_or_abort(1)
     return
@@ -179,8 +178,10 @@ def repeat_or_abort(n):
             run_the_interface()
 
 def run_the_interface():
-    print("Welcome to the sorption calculator. Available subroutines:")
+    print("Welcome to the sorption calculator.")
+    print(f"The cauclations are being performed usign {file_path_df_curve} file.")
     print("")
+    print("Available subroutines:")
     print("1 - Pressure calculator")
     print("2 - Adsorption potential calculator")
     print("3 - Isobar calculator")
